@@ -1,0 +1,391 @@
+/* 科技感主题 - 适用于车机环境 */
+
+:root {
+  --primary-color: #00f0ff;
+  --secondary-color: #7b00ff;
+  --accent-color: #ff00c8;
+  --background-dark: #0a0a14;
+  --background-medium: #141428;
+  --text-color: #ffffff;
+  --text-secondary: #b3b3cc;
+  --glow-effect: 0 0 15px rgba(0, 240, 255, 0.7);
+  --button-glow: 0 0 20px rgba(123, 0, 255, 0.8);
+  --panel-blur: blur(12px);
+  --panel-border: 2px solid rgba(0, 240, 255, 0.4);
+  --panel-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+  --gradient-primary: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(123, 0, 255, 0.3));
+  --gradient-secondary: linear-gradient(135deg, rgba(123, 0, 255, 0.2), rgba(255, 0, 200, 0.3));
+}
+
+/* 基础样式覆盖 */
+html, body, #root {
+  background: var(--background-dark);
+  color: var(--text-color);
+  font-family: 'Arial', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+/* Canvas 样式 */
+canvas {
+  border-radius: 16px;
+  box-shadow: var(--panel-shadow);
+  border: var(--panel-border);
+}
+
+/* 控制按钮样式 */
+button {
+  background: var(--gradient-primary);
+  color: var(--text-color);
+  border: var(--panel-border);
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--glow-effect);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  backdrop-filter: var(--panel-blur);
+}
+
+button:hover {
+  background: var(--gradient-secondary);
+  box-shadow: var(--button-glow);
+  transform: translateY(-2px) scale(1.02);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* 语音控制按钮样式 */
+.voice-control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-primary);
+  color: var(--text-color);
+  border: var(--panel-border);
+  box-shadow: var(--glow-effect);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: var(--panel-blur);
+}
+
+.voice-control-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.8);
+  border-color: var(--accent-color);
+}
+
+.voice-control-btn.active {
+  background: linear-gradient(135deg, #ff3a3a, #ff006f);
+  border-color: #ff006f;
+  color: white;
+  animation: pulse 1.5s infinite;
+  box-shadow: 0 0 25px rgba(255, 0, 111, 0.7);
+}
+
+/* 文件上传按钮 */
+.file-upload-btn {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-upload-area::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(0, 240, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  animation: shine 3s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+.file-upload-area:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.file-upload-btn svg {
+  width: 28px;
+  height: 28px;
+}
+
+.file-upload-btn input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* 视频预览区域 */
+.video-preview {
+  position: absolute;
+  bottom: 120px;
+  right: 30px;
+  width: 220px;
+  height: 165px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid var(--primary-color);
+  box-shadow: var(--glow-effect);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-origin: bottom right;
+  z-index: 900;
+  outline: 1px solid rgba(0, 240, 255, 0.3);
+  outline-offset: 3px;
+}
+
+.video-preview:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.7);
+  border-color: var(--accent-color);
+}
+
+.video-preview.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.video-preview.hidden {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+}
+
+.video-preview::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 25px;
+  background: linear-gradient(to bottom, rgba(10, 10, 20, 0.7), transparent);
+  pointer-events: none;
+}
+
+/* 加载指示器 */
+.loading-indicator {
+  color: var(--primary-color);
+  text-shadow: var(--glow-effect);
+  font-weight: bold;
+}
+
+/* 错误提示 */
+.error-message {
+  background: rgba(255, 0, 76, 0.9);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(255, 0, 76, 0.5);
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* 动画效果 */
+@keyframes pulse {
+  0% { opacity: 0.6; transform: scale(0.98); }
+  50% { opacity: 1; transform: scale(1.02); }
+  100% { opacity: 0.6; transform: scale(0.98); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.8); }
+  100% { box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* 模型信息面板 */
+.model-info {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(10, 10, 20, 0.85);
+  padding: 20px;
+  border-radius: 18px;
+  border: 2px solid rgba(0, 240, 255, 0.4);
+  color: var(--text-color);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+  max-width: 300px;
+  z-index: 10;
+  animation: fadeIn 0.5s ease-out;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.model-info:hover {
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.6);
+  transform: translateY(-3px);
+}
+
+.model-info h3 {
+  margin: 0 0 15px 0;
+  color: var(--primary-color);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+  padding-bottom: 8px;
+}
+
+.model-info p {
+  margin: 8px 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* 控制面板 */
+.control-panel {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 10, 20, 0.85);
+  border-radius: 20px;
+  border: 2px solid rgba(0, 240, 255, 0.4);
+  padding: 20px;
+  display: flex;
+  gap: 15px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.control-panel:hover {
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.6);
+}
+
+.control-panel button {
+  margin: 0;
+  padding: 12px 20px;
+  min-width: 120px;
+}
+
+.control-panel-minimized {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: pulse 3s infinite;
+}
+
+.control-panel-minimized:hover {
+  transform: translateX(-50%) scale(1.1) !important;
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.6) !important;
+}
+
+/* 聊天界面优化 */
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(10, 10, 20, 0.2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--primary-color), var(--secondary-color));
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(var(--secondary-color), var(--accent-color));
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .model-info {
+    top: 10px;
+    left: 10px;
+    padding: 15px;
+    max-width: 250px;
+  }
+  
+  .control-panel {
+    padding: 15px;
+    gap: 10px;
+  }
+  
+  .control-panel button {
+    padding: 10px 15px;
+    min-width: 100px;
+    font-size: 14px;
+  }
+}
+
+/* 3D模型容器 */
+.model-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--background-dark), var(--background-medium));
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(123, 0, 255, 0.2);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+
+/* 加载指示器 */
+.model-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-size: 18px;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+  animation: pulse 2s infinite;
+}
+
+.model-loader::after {
+  content: '';
+  width: 60px;
+  height: 60px;
+  border: 4px solid transparent;
+  border-top: 4px solid var(--primary-color);
+  border-right: 4px solid var(--secondary-color);
+  border-radius: 50%;
+  margin-top: 15px;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
