@@ -35,7 +35,7 @@ function App() {
     <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <div style={{ flex: 1, position: 'relative' }}>
         <Canvas
-          camera={{ position: [0, 0, 5], fov: 75 }}
+          camera={{ position: [0, 0, 7], fov: 60 }}
           style={{
             background: 'linear-gradient(135deg, var(--background-dark), var(--background-medium))',
             borderRadius: '16px',
@@ -48,12 +48,12 @@ function App() {
           <pointLight position={[10, 10, 10]} intensity={1} />
           <Suspense fallback={<ModelLoader />}>
             {modelUrl ? (
-              <Model url={modelUrl} rotation={modelRotation} />
+              <Model url={modelUrl} rotation={modelRotation} scale={1.2} />
             ) : (
               <DefaultModel onCommand={handleCommand} />
             )}
           </Suspense>
-          <OrbitControls enableDamping={true} />
+          <OrbitControls enableDamping={true} enableZoom={true} enablePan={true} />
         </Canvas>
         
         <OllamaChat onResponse={handleCommand} />
