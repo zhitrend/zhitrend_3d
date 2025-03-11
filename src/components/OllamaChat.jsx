@@ -263,204 +263,14 @@ function OllamaChat({ onResponse }) {
     }
   };
 
-  // 渲染消息气泡
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        right: '20px',
-        bottom: isMinimized ? '100px' : '120px',
-        width: '380px',
-        maxHeight: isMinimized ? '60px' : '600px',
-        background: 'rgba(10, 10, 20, 0.85)',
-        borderRadius: '20px',
-        border: '2px solid rgba(0, 240, 255, 0.4)',
-        backdropFilter: 'blur(12px)',
-        boxShadow: '0 0 30px rgba(0, 240, 255, 0.4)',
-        transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-        overflow: 'hidden',
-        zIndex: 1000
-      }}
-    >
-      {/* 聊天窗口标题栏 */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '15px 20px',
-          borderBottom: '1px solid rgba(0, 240, 255, 0.2)',
-          background: 'linear-gradient(90deg, rgba(0, 240, 255, 0.1), rgba(123, 0, 255, 0.1))',
-          cursor: 'pointer'
-        }}
-        onClick={toggleMinimized}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div
-            style={{
-              width: '10px',
-              height: '10px',
-              borderRadius: '50%',
-              background: getStatusColor(),
-              boxShadow: `0 0 10px ${getStatusColor()}`,
-              transition: 'all 0.3s ease'
-            }}
-          />
-          <span style={{ color: '#fff', fontSize: '16px', fontWeight: '600' }}>AI 助手</span>
-        </div>
-        {isMinimized ? <FaChevronUp /> : <FaChevronDown />}
-      </div>
-
-      {/* 聊天消息区域 */}
-      <div
-        ref={chatContainerRef}
-        style={{
-          display: isMinimized ? 'none' : 'flex',
-          flexDirection: 'column',
-          gap: '10px',
-          padding: '20px',
-          maxHeight: '400px',
-          overflowY: 'auto',
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none'
-        }}
-      >
-        {messages.map((message, index) => renderMessage(message, index))}
-      </div>
-
-      {/* 输入区域 */}
-      <div
-        style={{
-          display: isMinimized ? 'none' : 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          padding: '15px 20px',
-          borderTop: '1px solid rgba(0, 240, 255, 0.2)',
-          background: 'linear-gradient(90deg, rgba(0, 240, 255, 0.05), rgba(123, 0, 255, 0.05))',
-          position: 'relative'
-        }}
-      >
-        <button
-          onClick={toggleListening}
-          style={{
-            background: isListening ? 'linear-gradient(135deg, #ff3a3a, #ff006f)' : 'linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(123, 0, 255, 0.3))',
-            border: isListening ? '1px solid #ff006f' : '1px solid rgba(0, 240, 255, 0.4)',
-            padding: '8px',
-            color: '#ffffff',
-            cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            boxShadow: isListening ? '0 0 15px rgba(255, 0, 111, 0.7)' : '0 0 10px rgba(0, 240, 255, 0.3)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          {isListening ? <FaMicrophoneSlash size={20} /> : <FaMicrophone size={20} />}
-          
-          {/* 添加语音波纹动画效果 */}
-          {isListening && (
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: -1,
-              overflow: 'hidden'
-            }}>
-              {[...Array(3)].map((_, i) => (
-                <div key={i} style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: `${(i + 1) * 30}%`,
-                  height: `${(i + 1) * 30}%`,
-                  borderRadius: '50%',
-                  border: '2px solid rgba(255, 0, 111, 0.7)',
-                  opacity: 0,
-                  animation: `pulse-wave ${1 + i * 0.4}s infinite ease-out`,
-                }} />
-              ))}
-            </div>
-          )}
-        </button>
-
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="输入消息..."
-          style={{
-            flex: 1,
-            background: 'rgba(255, 255, 255, 0.1)',
-            border: '1px solid rgba(0, 240, 255, 0.3)',
-            borderRadius: '12px',
-            padding: '12px',
-            color: '#fff',
-            fontSize: '16px',
-            resize: 'none',
-            height: '40px',
-            lineHeight: '20px',
-            outline: 'none',
-            transition: 'all 0.3s ease'
-          }}
-        />
-
-        <button
-          onClick={sendMessage}
-          disabled={isLoading || !input.trim()}
-          style={{
-            background: input.trim() ? 'linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(123, 0, 255, 0.4))' : 'rgba(50, 50, 70, 0.3)',
-            border: input.trim() ? '1px solid rgba(0, 240, 255, 0.4)' : '1px solid rgba(100, 100, 120, 0.3)',
-            padding: '8px',
-            color: input.trim() ? '#ffffff' : '#666',
-            cursor: input.trim() ? 'pointer' : 'not-allowed',
-            transition: 'all 0.3s ease',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            boxShadow: input.trim() ? '0 0 10px rgba(0, 240, 255, 0.3)' : 'none',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          {isLoading ? (
-            <div style={{
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              border: '2px solid rgba(0, 240, 255, 0.3)',
-              borderTopColor: '#00f0ff',
-              animation: 'spin 1s linear infinite'
-            }} />
-          ) : (
-            <FaPaperPlane size={18} style={{
-              transform: 'translateX(-1px)',
-              transition: 'all 0.3s ease'
-            }} />
-          )}
-        </button>
-      </div>
-    </div>
-  );
-
-  const renderMessage = (message, index) => {
+  // 消息气泡组件
+  const MessageBubble = ({ message }) => {
     const isUser = message.role === 'user';
     const isSystem = message.role === 'system';
     const isError = message.role === 'error';
 
     return (
       <div 
-        key={index} 
         className={`message ${isUser ? 'user-message' : isSystem ? 'system-message' : isError ? 'error-message' : 'ai-message'}`}
         style={{
           alignSelf: isUser ? 'flex-end' : 'flex-start',
@@ -476,17 +286,13 @@ function OllamaChat({ onResponse }) {
                     isSystem ? '0 2px 10px rgba(255, 255, 255, 0.15)' : 
                     isError ? '0 2px 15px rgba(255, 0, 0, 0.25)' : 
                     '0 2px 15px rgba(123, 0, 255, 0.25)',
-          border: isUser ? '1px solid rgba(0, 240, 255, 0.4)' : 
-                  isSystem ? '1px solid rgba(255, 255, 255, 0.2)' : 
-                  isError ? '1px solid rgba(255, 0, 0, 0.4)' : 
-                  '1px solid rgba(123, 0, 255, 0.4)',
-          wordBreak: 'break-word',
-          lineHeight: '1.6',
           position: 'relative',
-          backdropFilter: 'blur(5px)',
-          animation: 'fadeIn 0.3s ease-out',
-          transform: 'translateZ(0)',
-          transition: 'all 0.2s ease'
+          color: '#ffffff',
+          fontSize: '14px',
+          lineHeight: '1.5',
+          wordBreak: 'break-word',
+          whiteSpace: 'pre-wrap',
+          transition: 'all 0.3s ease'
         }}
       >
         {isUser && (
@@ -512,38 +318,162 @@ function OllamaChat({ onResponse }) {
             fontWeight: '500',
             textShadow: '0 0 5px rgba(123, 0, 255, 0.5)'
           }}>
-            AI
-          </div>
-        )}
-        {isError && (
-          <div style={{ 
-            position: 'absolute', 
-            top: '-22px', 
-            left: '10px', 
-            fontSize: '12px', 
-            color: 'rgba(255, 0, 0, 0.8)',
-            fontWeight: '500',
-            textShadow: '0 0 5px rgba(255, 0, 0, 0.5)'
-          }}>
-            错误
+            AI助手
           </div>
         )}
         {message.content}
-        
-        {/* 添加底部装饰元素，增强科技感 */}
-        {!isSystem && (
-          <div style={{
-            position: 'absolute',
-            bottom: '2px',
-            [isUser ? 'right' : 'left']: '5px',
-            height: '2px',
-            width: '40%',
-            background: isUser ? 'linear-gradient(to right, transparent, rgba(0, 240, 255, 0.7))' : 
-                      isError ? 'linear-gradient(to left, transparent, rgba(255, 0, 0, 0.7))' :
-                      'linear-gradient(to left, transparent, rgba(123, 0, 255, 0.7))',
-            borderRadius: '1px'
-          }} />
-        )}
       </div>
     );
   };
+
+  return (
+    <div className="chat-container" style={{
+      position: 'fixed',
+      bottom: '20px',
+      right: '20px',
+      width: isMinimized ? '60px' : '350px',
+      height: isMinimized ? '60px' : '500px',
+      backgroundColor: 'rgba(10, 10, 20, 0.85)',
+      borderRadius: '16px',
+      boxShadow: '0 5px 25px rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      transition: 'all 0.3s ease',
+      backdropFilter: 'blur(10px)',
+      border: '1px solid rgba(123, 0, 255, 0.3)',
+      zIndex: 1000
+    }}>
+      {/* 聊天头部 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '10px 15px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'rgba(123, 0, 255, 0.2)'
+      }}>
+        {!isMinimized && (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{
+              width: '10px',
+              height: '10px',
+              borderRadius: '50%',
+              backgroundColor: getStatusColor(),
+              marginRight: '8px'
+            }}></div>
+            <span style={{ color: '#fff', fontWeight: '500' }}>AI助手 ({ollamaStatus})</span>
+          </div>
+        )}
+        <button
+          onClick={toggleMinimized}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#fff',
+            cursor: 'pointer',
+            padding: '5px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          {isMinimized ? <FaChevronUp /> : <FaChevronDown />}
+        </button>
+      </div>
+
+      {/* 聊天内容区域 */}
+      {!isMinimized && (
+        <>
+          <div
+            ref={chatContainerRef}
+            style={{
+              flex: 1,
+              overflowY: 'auto',
+              padding: '15px',
+              display: 'flex',
+              flexDirection: 'column',
+              scrollBehavior: 'smooth'
+            }}
+          >
+            {messages.map((msg, index) => (
+              <MessageBubble key={index} message={msg} />
+            ))}
+            {isLoading && (
+              <div style={{
+                alignSelf: 'flex-start',
+                padding: '10px 15px',
+                backgroundColor: 'rgba(123, 0, 255, 0.15)',
+                borderRadius: '16px 4px 16px 16px',
+                margin: '8px 0',
+                color: '#fff'
+              }}>
+                <div className="typing-indicator">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 输入区域 */}
+          <div style={{
+            padding: '10px',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: 'rgba(20, 20, 35, 0.5)'
+          }}>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="输入消息..."
+              style={{
+                flex: 1,
+                padding: '10px',
+                borderRadius: '8px',
+                border: '1px solid rgba(123, 0, 255, 0.3)',
+                backgroundColor: 'rgba(30, 30, 50, 0.6)',
+                color: '#fff',
+                resize: 'none',
+                height: '40px',
+                outline: 'none'
+              }}
+            />
+            <button
+              onClick={toggleListening}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: isListening ? '#ff0066' : '#fff',
+                cursor: 'pointer',
+                marginLeft: '10px',
+                padding: '5px'
+              }}
+            >
+              {isListening ? <FaMicrophoneSlash /> : <FaMicrophone />}
+            </button>
+            <button
+              onClick={sendMessage}
+              disabled={!input.trim() || isLoading}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: input.trim() && !isLoading ? '#00ccff' : '#555',
+                cursor: input.trim() && !isLoading ? 'pointer' : 'not-allowed',
+                marginLeft: '10px',
+                padding: '5px'
+              }}
+            >
+              <FaPaperPlane />
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+export default OllamaChat;

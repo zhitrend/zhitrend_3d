@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Suspense } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import ModelLoader from './components/ModelLoader';
 import OllamaChat from './components/OllamaChat';
 import Model from './components/Model';
